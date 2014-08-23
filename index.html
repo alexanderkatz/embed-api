@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<title>The Katz Dashboard &mdash; Embed API</title>
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:700,400,300' rel='stylesheet'>
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+	<header class="Banner">
+		<h1 class="Banner-title">
+    	<a href="/">The Katz Dashboard</a>
+    	<em>Powered by Embed API</em>
+  		</h1>
+		<div class="Banner-auth" id="auth"></div>
+	</header>
+
+	<main>
+		<div id="controlPanel">
+			<div class="controls" id="viewpicker"></div>
+			<div class="controls" id="datepicker"></div>
+		</div>
+		<!--Chart 1-->
+		<section class="myChart Component">
+			<h3 class="Chart-title">Users</h3>
+			<div id="chart1"></div>
+		</section>
+		<!--Chart 2-->
+		<section class="myChart Component">
+			<h3 class="Chart-title">Operating System</h3>
+			<div id="chart2"></div>
+		</section>
+
+	</main>
+
+	<!-- This code snippet loads the Embed API. Do not modify! -->
+	<script>
+		(function (w, d, s, g, js, fjs) {
+			g = w.gapi || (w.gapi = {});
+			g.analytics = {
+				q: [],
+				ready: function (cb) {
+					this.q.push(cb)
+				}
+			};
+			js = d.createElement(s);
+			fjs = d.getElementsByTagName(s)[0];
+			js.src = 'https://apis.google.com/js/platform.js';
+			fjs.parentNode.insertBefore(js, fjs);
+			js.onload = function () {
+				g.load('analytics')
+			};
+		}(window, document, 'script'));
+	</script>
+
+	<!-- This demo uses the viewpicker component, which uses JavaScript promises.
+The promise.js script below polyfills promises in older browsers that don't
+support them. -->
+	<script src="js/promise.js"></script>
+	<script src="js/viewpicker.js"></script>
+	<script src="js/datepicker.js"></script>
+
+	<script>
+		gapi.analytics.ready(function () {
+
+			/**
+			 * Authorize this user.
+			 */
+			gapi.analytics.auth.authorize({
+				container: 'auth',
+				clientid: '1021764862797-cma2t1ue2uu715hmjgof0rh3992vtevm.apps.googleusercontent.com',
+			});
+
+			/**
+			 * Add a callback to add the `is-authorized` class to the body
+			 * as soon as authorization is successful. This is used to help
+			 * style components.
+			 */
+			gapi.analytics.auth.on('success', function () {
+				document.documentElement.classList.add('is-authorized');
+			});
+
+			/**
+			 * Create a new Viewpicker instance to be rendered inside of an
+			 * element with the id "viewpicker".
+			 */
+			var viewpicker = new gapi.analytics.ext.Viewpicker({
+				container: 'viewpicker'
+			}).execute();
+
+			// Initial Range
+			var range = {
+				'start-date': '7daysAgo',
+				'end-date': 'yesterday',
+			};
+
+			/**
+			 * Create a new Datepicker instance to be rendered inside of an
+			 * element with the id "datepicker-1" and set its date range.
+			 */
+			var datepicker = new gapi.analytics.ext.Datepicker({
+					container: 'datepicker'
+				})
+				.set(range)
+				.execute();
+			/**
+			 * Create a new DataChart instance with the given query parameters
+			 * and Google chart options. It will be rendered inside an element
+			 * with the id "datachert".
+			 */
+			var dataChart1 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'metrics': 'ga:users',
+					'dimensions': 'ga:date',
+				},
+				chart: {
+					container: 'chart1',
+					type: 'LINE',
+					options: {
+						width: '100%'
+					}
+				}
+			});
+
+			var dataChart2 = new gapi.analytics.googleCharts.DataChart({
+				query: {
+					'metrics': 'ga:users',
+					'dimensions': 'ga:operatingSystem',
+				},
+				chart: {
+					container: 'chart2',
+					type: 'BAR',
+					options: {
+						width: '100%'
+					}
+				}
+			});
+
+			/**
+			 * Register a handler to run whenever the user changes the view.
+			 * The handler will calls updateCharts and passes data as a param
+			 */
+			viewpicker.on('change', function (data) {
+				updateCharts(data);
+			});
+
+			/**
+			 * Register a handler to run whenever the user changes the date.
+			 * The handler will calls updateCharts and passes data as a param.
+			 */
+			datepicker.on('change', function (data) {
+				updateCharts(data);
+			});
+
+			/**
+			 * Updates all charts with new query.
+			 * Without this function user would have to set a new query
+			 * for each chart in both the datepicker and viewpicker event handler functions.
+			 */
+			function updateCharts(data) {
+				dataChart1.set({
+					query: data
+				}).execute();
+				dataChart2.set({
+					query: data
+				}).execute();
+
+			}
+
+			// End of analytics.ready
+		});
+	</script>
+
+
+	<footer class="SourceLink">
+		<a href="https://github.com/googleanalytics/embed-api-demos/blob/master/site/1-basic-dashboard.html">
+  View source on Github</a>
+		&nbsp;&#8594;
+	</footer>
+
+
+</body>
+
+</html>

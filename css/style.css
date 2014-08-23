@@ -1,0 +1,60 @@
+/* LAYOUT **************************************************************/
+
+main {
+	margin-left: 1em;
+	margin-right: 1em;
+	overflow: hidden;
+}
+.inline {
+	display: inline-block;
+}
+.Banner-title em {
+	margin: 0px;
+}
+#article p,
+ul {
+	max-width: 900px;
+	font-size: 14px;
+}
+/* HEADER **************************************************************/
+
+.Banner {
+	background: #173645;
+	padding: 0em;
+}
+.Banner-title {
+	padding: .75em;
+	margin: 0em 1.5em;
+}
+#title {
+	margin-right: .5em
+}
+#auth {
+	padding-right: 15px;
+}
+/* CONTROLS **************************************************************/
+
+.controls {
+	background: white;
+	display: inline-block;
+	margin-left: 1.5em;
+	margin-bottom: 1.5em;
+	border: 1px solid #ccc;
+}
+.Datepicker-item,
+.Viewpicker-item {
+	padding: 1em;
+}
+/* CHARTS **************************************************************/
+
+.myChart {
+	width: 500px;
+}
+.wideChart {
+	width: 100px;
+}
+/* Tutorial **************************************************************/
+
+ul {
+	list-style: inherit;
+}
